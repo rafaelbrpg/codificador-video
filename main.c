@@ -4,21 +4,33 @@
  * and open the template in the editor.
  */
 
-/* 
+/*
  * File:   main.c
- * Author: cps
+ * Author: Aleffer Rocha and Rafael Siqueira
  *
  * Created on 8 de Maio de 2018, 16:19
  */
 
-#include <stdio.h>
-#include <stdlib.h>
+#include "lib.h"
 
-/*
- * 
- */
-int main(int argc, char** argv) {
-    printf("Teste!");
-    return (EXIT_SUCCESS);
+/* Biblioteca utilizada apenas para testes */
+#include <time.h>
+
+int main(void) {
+    No *raiz = NULL;
+    int i, num;
+
+    srand(time(NULL));
+
+    for(i = 0; i < 10; i++) {
+        num = rand() % 50;
+        insereAVL(num, &raiz);
+        printf("Gerou: %d\n", num);
+    }
+
+    puts("Imprimindo conteudo da AVL:");
+
+    imprimeAVL(&raiz);
+
+    return 0;
 }
-
