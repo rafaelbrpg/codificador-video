@@ -132,3 +132,23 @@ void imprimeAVL(No **p) {
     puts("Direita");
     imprimeAVL(&(*p)->dir);
 }
+
+int rot_dir(No **p) {
+    if(p == NULL)
+        return 1;
+
+    (*p)->dir->dir = (*p)->esq;
+    (*p)->esq = (*p)->dir->dir;
+
+    return 0;
+}
+
+int rot_esq(No **p) {
+    if(p == NULL)
+        return 1;
+
+    (*p)->esq->esq = (*p)->dir;
+    (*p)->dir = (*p)->esq->esq;
+
+    return 0;
+}

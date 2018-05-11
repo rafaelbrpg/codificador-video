@@ -26,3 +26,7 @@ typedef struct _no {
 int insereAVL(int x, No **p);
 
 void imprimeAVL(No **p);
+
+int rot_dir(No **p);
+
+int rot_esq(No **p);
