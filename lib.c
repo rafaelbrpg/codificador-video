@@ -10,20 +10,26 @@
 int insereAVL(int x, No **p) {
     int cresceu;
 
-    if(*p == NULL) {
+    // O no raiz esta vazio
+    if(*p == NULL) { // Este IF esta OK
         *p = (No *) malloc(sizeof(No));
 
         (*p)->chave = x;
         (*p)->dir = (*p)->esq = NULL;
         (*p)->bal = 0;
+
+        printf("Inseri o valor chave: %d\n", (*p)->chave);
         // Esta subarvore cresceu
         cresceu = 1;
     }
     // Senao, verifica se tem que inserir a esquerda
     else if ((*p)->chave > x) {
         // Tenta inserir a esquerda e ve se a subarvore cresceu
+
+        puts("Chamando insereAVL (esquerda) again");
         cresceu = insereAVL(x, &(*p)->esq);
 
+        // Se cresceu for diferente de 0, logo a arvore cresceu
         if(cresceu) {
             // Verifica o estado atual de balanceamento
             switch ((*p)->bal) {
@@ -32,7 +38,7 @@ int insereAVL(int x, No **p) {
                     (*p)->bal = 0;
                     cresceu = 0;
                     break;
-                // Se a arvore direita tinha tamanhjo igual entao houve crescimento
+                // Se a subarvore direita tinha tamanho igual entao houve crescimento
                 case 0:
                     (*p)->bal = -1;
                     cresceu = 1;
@@ -41,6 +47,7 @@ int insereAVL(int x, No **p) {
                 case -1:
                     if((*p)->esq->bal == -1) {
                         // Rotacao para a direita
+                        printf("Mandei rotacionar a raiz %d\n", (*p)->chave);
                         rot_dir(p);
                         // Arruma os balanceamentos
                         (*p)->bal = (*p)->dir->bal = 0;
@@ -48,9 +55,11 @@ int insereAVL(int x, No **p) {
                     else {
                         // Rotacao dupla
                         // Rotaciona primeiro a esquerda
+                        printf("Mandei rotacionar o no %d\n", (*p)->esq->chave);
                         rot_esq(&(*p)->esq);
                         // Depois rotaciona a direita
-                        rot_esq(p);
+                        printf("Mandei rotacionar a raiz %d\n", (*p)->chave);
+                        rot_dir(p);
                         // Acerta balanceamentos
                         if((*p)->bal == -1) {
                             (*p)->esq->bal = 0;
@@ -71,6 +80,7 @@ int insereAVL(int x, No **p) {
     // Verifica se tem que inserir a direita
     else if((*p)->chave < x) {
         // Tenta inserir a direita e ve se a sub-arvore cresceu
+        puts("Chamando insereAVL (direita) again");
         cresceu = insereAVL(x, &(*p)->dir);
 
         if(cresceu) {
@@ -92,6 +102,7 @@ int insereAVL(int x, No **p) {
                     // Se a arvore da direita do filho da direita esta mais alta entao basta uma rotacao para a esquerda
                     if((*p)->dir->bal == 1) {
                         // Rotacao para a esquerda
+                        printf("Mandei rotacionar a raiz %d\n", (*p)->chave);
                         rot_esq(p);
                         // Acerta os balanceamentos
                         (*p)->bal = (*p)->esq->bal = 0;
@@ -99,8 +110,10 @@ int insereAVL(int x, No **p) {
                     else {
                         // Rotacao dupla
                         // Primeiro a direita
+                        printf("Mandei rotacionar a raiz %d\n", (*p)->dir->chave);
                         rot_dir(&(*p)->dir);
                         // Depois a esquerda
+                        printf("Mandei rotacionar a raiz %d\n", (*p)->chave);
                         rot_esq(p);
                         // Acerta os balanceamentos
                         if((*p)->bal == -1) {
@@ -122,33 +135,35 @@ int insereAVL(int x, No **p) {
     else
         cresceu = 0;
 
+    puts("Saiu da insereAVL");
     return cresceu;
 }
 
 void imprimeAVL(No **p) {
-    puts("Esquerda");
-    imprimeAVL(&(*p)->esq);
-    printf("[%d]\n", (*p)->chave);
-    puts("Direita");
-    imprimeAVL(&(*p)->dir);
+    if((*p) != NULL) {
+        imprimeAVL(&(*p)->esq);
+        printf("[%d]\n", (*p)->chave);
+        imprimeAVL(&(*p)->dir);
+    }
 }
 
 int rot_dir(No **p) {
-    if(p == NULL)
+    puts("Rotacionando para a direita");
+    if((*p) == NULL)
         return 1;
 
-    (*p)->dir->dir = (*p)->esq;
-    (*p)->esq = (*p)->dir->dir;
+    (*p)->dir = (*p)->esq;
+    (*p)->esq = (*p)->dir;
 
     return 0;
 }
 
 int rot_esq(No **p) {
-    if(p == NULL)
+    puts("Rotacionando para a esquerda");
+    if((*p) == NULL)
         return 1;
-
-    (*p)->esq->esq = (*p)->dir;
-    (*p)->dir = (*p)->esq->esq;
+    (*p)->esq = (*p)->dir;
+    (*p)->dir = (*p)->esq;
 
     return 0;
 }

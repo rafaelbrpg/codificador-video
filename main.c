@@ -24,8 +24,8 @@ int main(void) {
 
     for(i = 0; i < 10; i++) {
         num = rand() % 50;
-        insereAVL(num, &raiz);
         printf("Gerou: %d\n", num);
+        insereAVL(num, &raiz);
     }
 
     puts("Imprimindo conteudo da AVL:");
