@@ -156,8 +156,8 @@ int altura_arvore(No **p) {
         return -1;
     }
     else {
-        alt_esq = altura_arvore((*p)->esq);
-        alt_dir = altura_arvore((*p)->dir);
+        alt_esq = altura_arvore(&(*p)->esq);
+        alt_dir = altura_arvore(&(*p)->dir);
 
         if(alt_esq > alt_dir)
             return alt_esq + 1;
