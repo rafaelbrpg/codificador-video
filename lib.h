@@ -4,6 +4,8 @@
  *
  * Created on 8 de Maio de 2018, 16:19
  */
+#ifndef _H_AVL
+#define _H_AVL
 
 #include <stdio.h>
 #include <stdlib.h>
