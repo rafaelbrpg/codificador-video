@@ -151,8 +151,8 @@ void imprimeAVL(No **p) {
 int altura_arvore(No **p) {
     int alt_esq, alt_dir;
 
+    // Caso em que a arvore esta vazia.
     if((*p) == NULL) {
-        puts("A arvore esta vazia.");
         return -1;
     }
     else {
@@ -168,22 +168,34 @@ int altura_arvore(No **p) {
 
 
 int rot_dir(No **p) {
+    No *q, *tmp;
+
     puts("Rotacionando para a direita");
+
     if((*p) == NULL)
         return 1;
 
-    (*p)->dir = (*p)->esq;
-    (*p)->esq = (*p)->dir;
+    q = (*p)->esq;
+    tmp = q->dir;
+    q->dir = (*p);
+    (*p)->esq = tmp;
+    (*p) = q;
 
     return 0;
 }
 
 int rot_esq(No **p) {
+    No *q, *tmp;
+
     puts("Rotacionando para a esquerda");
     if((*p) == NULL)
         return 1;
-    (*p)->esq = (*p)->dir;
-    (*p)->dir = (*p)->esq;
+
+    q = (*p)->dir;
+    tmp = q->esq;
+    q->esq = (*p);
+    (*p)->dir = tmp;
+    (*p) = q;
 
     return 0;
 }
