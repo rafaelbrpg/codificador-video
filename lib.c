@@ -23,7 +23,7 @@ int insereAVL(int x, No **p) {
         cresceu = 1;
     }
     // Senao, verifica se tem que inserir a esquerda
-    else if ((*p)->chave > x) {
+    else if ((*p)->chave >= x) {
         // Tenta inserir a esquerda e ve se a subarvore cresceu
 
         puts("Chamando insereAVL (esquerda) again");
@@ -146,6 +146,26 @@ void imprimeAVL(No **p) {
         imprimeAVL(&(*p)->dir);
     }
 }
+
+// Algoritmo que calcula a altura de uma arvore binaria de pesquisa
+int altura_arvore(No **p) {
+    int alt_esq, alt_dir;
+
+    if((*p) == NULL) {
+        puts("A arvore esta vazia.");
+        return -1;
+    }
+    else {
+        alt_esq = altura_arvore((*p)->esq);
+        alt_dir = altura_arvore((*p)->dir);
+
+        if(alt_esq > alt_dir)
+            return alt_esq + 1;
+        else
+            return alt_dir + 1;
+    }
+}
+
 
 int rot_dir(No **p) {
     puts("Rotacionando para a direita");

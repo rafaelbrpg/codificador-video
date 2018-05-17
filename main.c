@@ -22,12 +22,13 @@ int main(void) {
 
     srand(time(NULL));
 
-    for(i = 0; i < 10; i++) {
+    for(i = 0; i < 5; i++) {
         num = rand() % 50;
         printf("Gerou: %d\n", num);
         insereAVL(num, &raiz);
     }
 
+    printf("Altura da arvore: %d\n", altura_arvore(&raiz));
     puts("Imprimindo conteudo da AVL:");
 
     imprimeAVL(&raiz);
