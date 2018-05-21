@@ -17,7 +17,7 @@ int codifica(char * nome_arquivo) {
 	while (!feof(F_in)) {
 		it.n_bytes = fread(it.dados, 1,TAM,F_in);			// leitura dos bytes do arquivo F_IN / Salva na estrututa qnt_bytes lidos
 		it.ordem = ord; 						// Posicao (indice/ordem) dos dados lidos no arquivo original
-		sprintf(nome_arq, "files/arq_%d.dat", ord); 				// escreve o nome do arquivo (Sequencial) * FALTA IMPLMENTAR A ALEATORIDADE
+		sprintf(nome_arq, "files/arq_%6d.dat", ord); 				// escreve o nome do arquivo (Sequencial) * FALTA IMPLMENTAR A ALEATORIDADE
 
 		// Falta gerar o nome aleatório do arquivo dentro da quantidade máxima de arquvios a serem gerados
 
