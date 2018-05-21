@@ -18,21 +18,47 @@
  *     0 se esta balanceado;
  *     1 se a subarvore direita e maior.
  */
+
+ //Estrutura das partes do vídeo
+ typedef struct _item {
+     char dados[TAM]; // bytes de vídeo
+     int ordem; // índice do vídeo
+     int n_bytes; // quantidade de bytes lidos
+ } TipoItem;
+
+ // Estrutura para teste da arvore AVL
 typedef struct _no {
-    int chave;
-    int bal;
-    struct _no *esq;
-    struct _no *dir;
+    int chave; // Valor chave
+    int bal; // Indice de balanceamento
+    TipoItem inf_video;
+    struct _no *esq; // Ponteiro para a subarvore esquerda
+    struct _no *dir; // Ponteiro para a subarvore direita
 } No;
 
-int insereAVL(int x, No **p);
 
-void imprimeAVL(No **p);
+int codifica(char * nome_arquivo);
 
+void decodifica (int ord, char * nome_arquivo);
+
+// Recebe um inteiro x e um no **p que aponta para a raiz da arvore
+// Insere x na arvore
+int insereAVL(No **p, TipoItem inf);
+
+// Recebe um no **p que aponta para a raiz da arvore
+// Imprime o item chave de cada no da arvore
+void imprimeAVL(No **p, FILE *out);
+
+// Recebe um no **p que aponta para a raiz da arvore
 int altura_arvore(No **p);
 
+void dois_imprimeAVL(No **p);
+
+// Recebe um no **p que aponta para a raiz da arvore
+// Rotaciona este no para a direita
 int rot_dir(No **p);
 
+// Recebe um no **p que aponta para a raiz da arvrore
+// Rotaciona este no para a esquerda
 int rot_esq(No **p);
 
 #endif

@@ -7,8 +7,65 @@
 
 #include "lib.h"
 
-int insereAVL(int x, No **p) {
+int codifica(char * nome_arquivo) {
+	FILE *F_in, *F_out;							// ponteiros - arquivo - F_in (leitura) - F_out (Escrita)
+	F_in = fopen (nome_arquivo,"rb");			// Arquivo - dados originais
+	TipoItem it;								// aux da estrutura
+	int ord = 1;								// contador/ordem dos bytes lidos
+	char nome_arq[20];							// nome do arquivo a ser gravado
+
+	while (!feof(F_in)) {
+		it.n_bytes = fread(it.dados, 1,TAM,F_in);			// leitura dos bytes do arquivo F_IN / Salva na estrututa qnt_bytes lidos
+		it.ordem = ord; 						// Posicao (indice/ordem) dos dados lidos no arquivo original
+		sprintf(nome_arq, "files/arq_%d.dat", ord); 				// escreve o nome do arquivo (Sequencial) * FALTA IMPLMENTAR A ALEATORIDADE
+
+		// Falta gerar o nome aleatório do arquivo dentro da quantidade máxima de arquvios a serem gerados
+
+		F_out = fopen(nome_arq, "wb");							// Abre o arquivo para escrita
+		printf("\n arq %d - ord %d - num bytes -> %d",ord, it.ordem, it.n_bytes);	// Imprime na tela somente a título de controle
+		fwrite(&it, sizeof(TipoItem),1,F_out);						// Escreve a estrutura no arquivo F_out
+		fclose(F_out);									// Fecha o arquivo F_out
+		ord ++;                         						// Incrementa o contador
+	}
+
+	fclose(F_in);								// Fecha o arquivo de leitura
+	return ord;                                                             // Retorna a quantidade de arquvios criados
+}
+
+void decodifica (int ord, char * nome_arquivo) {
+	FILE *F_in, *F_out;
+	F_out = fopen(nome_arquivo, "wb");
+
+	int i;
+	char nome_arq[20];
+	TipoItem it;
+    No *raiz = NULL;
+
+	for (i = 1; i < ord; i++) {
+		sprintf(nome_arq, "files/arq_%d.dat", i); 				// Gera o nome do arquivo Sequencial para leitura
+		F_in = fopen(nome_arq, "rb");					// Abre o arquivo para realizar a leitura da estrutura salva
+		fread(&it, sizeof(TipoItem),1,F_in);				// Faz a leitura da estrutura conforme nome do arquivo
+
+        insereAVL(&raiz, it);
+		// ORDENAÇÃO DAS ESTRUTURAS LIDAS PELA AVL
+    }
+
+	// dois_imprimeAVL(&raiz); return;
+	// imprimeAVL(&raiz, F_out); return;
+
+		// fwrite(&it.dados, sizeof(char),it.n_bytes,F_out);					// Escreve o it.dados CONFORME (indice/ordem) no arquivo de reconstrução
+		// printf("\n Escrevendo arq %d - ord %d - num bytes -> %d",i, it.ordem, it.n_bytes);	// impressão de controke
+		// fclose(F_in);										// Fecha o arquivo de leitura
+	// }
+	fclose(F_in);
+	fclose(F_out);											// Fecha o arquivo de Escrita
+}
+
+
+
+int insereAVL(No **p, TipoItem inf_video) {
     int cresceu;
+	int x = inf_video.ordem;
 
     // O no raiz esta vazio
     if(*p == NULL) { // Este IF esta OK
@@ -17,6 +74,7 @@ int insereAVL(int x, No **p) {
         (*p)->chave = x;
         (*p)->dir = (*p)->esq = NULL;
         (*p)->bal = 0;
+		(*p)->inf_video = inf_video;
 
         printf("Inseri o valor chave: %d\n", (*p)->chave);
         // Esta subarvore cresceu
@@ -27,7 +85,7 @@ int insereAVL(int x, No **p) {
         // Tenta inserir a esquerda e ve se a subarvore cresceu
 
         puts("Chamando insereAVL (esquerda) again");
-        cresceu = insereAVL(x, &(*p)->esq);
+        cresceu = insereAVL(&(*p)->esq, inf_video);
 
         // Se cresceu for diferente de 0, logo a arvore cresceu
         if(cresceu) {
@@ -81,7 +139,7 @@ int insereAVL(int x, No **p) {
     else if((*p)->chave < x) {
         // Tenta inserir a direita e ve se a sub-arvore cresceu
         puts("Chamando insereAVL (direita) again");
-        cresceu = insereAVL(x, &(*p)->dir);
+        cresceu = insereAVL(&(*p)->dir, inf_video);
 
         if(cresceu) {
             // Verifica o estado atual de balanceamento
@@ -139,11 +197,22 @@ int insereAVL(int x, No **p) {
     return cresceu;
 }
 
-void imprimeAVL(No **p) {
+void imprimeAVL(No **p, FILE *out) {
     if((*p) != NULL) {
-        imprimeAVL(&(*p)->esq);
+        imprimeAVL(&(*p)->esq, out);
+		// Escreve o &(*p)->inf_video.dados CONFORME (indice/ordem) no arquivo de reconstrução
+		fwrite(&(*p)->inf_video.dados, sizeof(char), (*p)->inf_video.n_bytes, out);
+		printf("\n Escrevendo arq X - ord %d - num bytes -> %d", (*p)->inf_video.ordem, (*p)->inf_video.n_bytes);	// impressão de controke
+        // printf("[%d]\n", (*p)->chave);
+        imprimeAVL(&(*p)->dir, out);
+    }
+}
+
+void dois_imprimeAVL(No **p) {
+    if((*p) != NULL) {
+        dois_imprimeAVL(&(*p)->esq);
         printf("[%d]\n", (*p)->chave);
-        imprimeAVL(&(*p)->dir);
+        dois_imprimeAVL(&(*p)->dir);
     }
 }
 
