@@ -42,7 +42,7 @@ void decodifica (int ord, char * nome_arquivo) {
     No *raiz = NULL;
 
 	for (i = 1; i < ord; i++) {
-		sprintf(nome_arq, "files/arq_%d.dat", i); 				// Gera o nome do arquivo Sequencial para leitura
+		sprintf(nome_arq, "files/arq_%6d.dat", i); 				// Gera o nome do arquivo Sequencial para leitura
 		F_in = fopen(nome_arq, "rb");					// Abre o arquivo para realizar a leitura da estrutura salva
 		fread(&it, sizeof(TipoItem),1,F_in);				// Faz a leitura da estrutura conforme nome do arquivo
 
