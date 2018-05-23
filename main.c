@@ -22,13 +22,15 @@ int main(void) {
     // int i, num;
     char * nome_arquivo = "files/VIDEO_ORIGINAL.zip";	// Definição do nome do arquivo original do vídeo
 	int qnt_arquivos;                               // Quantidade de arquivos escritos
-
+        
+        //para abrir o do professor, comentar a próxima linha
 	qnt_arquivos = codifica(nome_arquivo);		// "Codifica" o arquivo
 
 	// system("pause");				// Pausa para verificar qnt de bytes lidas no último bloco
-
+        
 	nome_arquivo = "files/VIDEO_RECONSTRUIDO.zip";	// Definição do arquivo F_out, recontrução do vídeo
-	decodifica(qnt_arquivos, nome_arquivo);		// "Decodifica", reconstrói o vídeo
+	//Para abir o do professor, substitua qnt_arquivos por 32140
+        decodifica(qnt_arquivos, nome_arquivo);		// "Decodifica", reconstrói o vídeo
 
     // srand(time(NULL));
     //

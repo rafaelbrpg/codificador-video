@@ -17,7 +17,7 @@ int codifica(char * nome_arquivo) {
 	while (!feof(F_in)) {
 		it.n_bytes = fread(it.dados, 1,TAM,F_in);			// leitura dos bytes do arquivo F_IN / Salva na estrututa qnt_bytes lidos
 		it.ordem = ord; 						// Posicao (indice/ordem) dos dados lidos no arquivo original
-		sprintf(nome_arq, "files/arq_%6d.dat", ord); 				// escreve o nome do arquivo (Sequencial) * FALTA IMPLMENTAR A ALEATORIDADE
+		sprintf(nome_arq, "files/%06d.dat", ord); 				// escreve o nome do arquivo (Sequencial) * FALTA IMPLMENTAR A ALEATORIDADE
 
 		// Falta gerar o nome aleatório do arquivo dentro da quantidade máxima de arquvios a serem gerados
 
@@ -42,22 +42,22 @@ void decodifica (int ord, char * nome_arquivo) {
     No *raiz = NULL;
 
 	for (i = 1; i < ord; i++) {
-		sprintf(nome_arq, "files/arq_%6d.dat", i); 				// Gera o nome do arquivo Sequencial para leitura
+		sprintf(nome_arq, "files/%06d.dat", i); 				// Gera o nome do arquivo Sequencial para leitura
 		F_in = fopen(nome_arq, "rb");					// Abre o arquivo para realizar a leitura da estrutura salva
 		fread(&it, sizeof(TipoItem),1,F_in);				// Faz a leitura da estrutura conforme nome do arquivo
 
         insereAVL(&raiz, it);
-		// ORDENAÇÃO DAS ESTRUTURAS LIDAS PELA AVL
+        // ORDENAÇÃO DAS ESTRUTURAS LIDAS PELA AVL
+        fclose(F_in);
     }
 
 	// dois_imprimeAVL(&raiz); return;
-	// imprimeAVL(&raiz, F_out); return;
+	imprimeAVL(&raiz, F_out); return;
 
 		// fwrite(&it.dados, sizeof(char),it.n_bytes,F_out);					// Escreve o it.dados CONFORME (indice/ordem) no arquivo de reconstrução
 		// printf("\n Escrevendo arq %d - ord %d - num bytes -> %d",i, it.ordem, it.n_bytes);	// impressão de controke
 		// fclose(F_in);										// Fecha o arquivo de leitura
 	// }
-	fclose(F_in);
 	fclose(F_out);											// Fecha o arquivo de Escrita
 }
 
