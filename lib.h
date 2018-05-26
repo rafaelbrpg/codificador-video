@@ -9,6 +9,8 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <dirent.h>
+#include <string.h>
 
 /* Tamanho de bytes a serem armazenados por no */
 #define TAM 1024
@@ -36,9 +38,9 @@ typedef struct _no {
 } No;
 
 
-int codifica(char * nome_arquivo);
+int codifica(char * nome_arquivo, char *diretorio);
 
-void decodifica (int ord, char * nome_arquivo);
+void decodifica (int ord, char * nome_arquivo, char *diretorio);
 
 // Recebe um inteiro x e um no **p que aponta para a raiz da arvore
 // Insere x na arvore

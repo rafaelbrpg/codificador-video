@@ -16,33 +16,59 @@
 /* Biblioteca utilizada apenas para testes */
 #include <time.h>
 
-int main(void) {
+int main(int argc, char *arvg[]) {
+    char nome_arquivo[100], diretorio[100]; // = "files/VIDEO_ORIGINAL.zip";	// Definição do nome do arquivo original do vídeo
+	int qnt_arquivos = 0;                               // Quantidade de arquivos escritos
+    DIR *dir;
+    struct dirent  *lsdir;
 
-    No *raiz = NULL;
-    // int i, num;
-    char * nome_arquivo = "files/VIDEO_ORIGINAL.zip";	// Definição do nome do arquivo original do vídeo
-	int qnt_arquivos;                               // Quantidade de arquivos escritos
-        
-        //para abrir o do professor, comentar a próxima linha
-	qnt_arquivos = codifica(nome_arquivo);		// "Codifica" o arquivo
+
+
+    if(*arvg[1] == 'c') {
+        puts("Digite o nome do arquivo .zip:");
+        scanf("%[^\n]s", nome_arquivo);
+        puts("Digite o nome do diretorio dos dados:");
+        scanf("%[^\n]s", diretorio);
+        setbuf(stdin, NULL);
+        codifica(nome_arquivo, diretorio);		// "Codifica" o arquivo
+
+        return 0;
+    }
+    else if(*arvg[1] == 'd') {
+        puts("Digite o diretorio com os dados do video a ser reconstruido:");
+        puts("Exemplo: files/");
+        scanf("%[^\n]s", diretorio);
+        setbuf(stdin, NULL);
+
+        puts("Digite o nome do arquivo .zip:");
+        puts("Exemplo: video_reconstruido.zip");
+        scanf("%[^\n]s", nome_arquivo);
+        setbuf(stdin, NULL);
+
+        /* COMECO DO TRECHO PARA LER QUANTIDADE DE ARQUIVOS EM UMA PASTA */
+        dir = opendir(diretorio);
+
+        while((lsdir = readdir(dir)) != NULL)
+            qnt_arquivos += 1;
+
+        closedir(dir);
+        /* FIM DO TRECHO PARA LER QUANTIDADE DE ARQUIVOS EM UMA PASTA */
+
+        qnt_arquivos -= 1;
+        printf("Quantidade de arquivos: %d\n", qnt_arquivos);
+
+        decodifica(qnt_arquivos, nome_arquivo, diretorio);		// "Decodifica", reconstrói o vídeo
+        return 0;
+    }
+    else {
+        puts("Parametro invalido.");
+        return 0;
+    }
 
 	// system("pause");				// Pausa para verificar qnt de bytes lidas no último bloco
-        
-	nome_arquivo = "files/VIDEO_RECONSTRUIDO.zip";	// Definição do arquivo F_out, recontrução do vídeo
+
+	// nome_arquivo = "files/VIDEO_RECONSTRUIDO.zip";	// Definição do arquivo F_out, recontrução do vídeo
 	//Para abir o do professor, substitua qnt_arquivos por 32140
-        decodifica(qnt_arquivos, nome_arquivo);		// "Decodifica", reconstrói o vídeo
-
-    // srand(time(NULL));
-    //
-    // for(i = 0; i < 10; i++) {
-    //     num = rand() % 500;
-    //     printf("Gerou: %d\n", num);
-    //     insereAVL(num, &raiz);
-    // }
-
-    printf("Altura da arvore: %d\n", altura_arvore(&raiz));
-    puts("Imprimindo conteudo da AVL:");
-    dois_imprimeAVL(&raiz);
 
     return 0;
 }
