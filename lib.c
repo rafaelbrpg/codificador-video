@@ -7,22 +7,45 @@
 
 #include "lib.h"
 
-int codifica(char * nome_arquivo, char *diretorio) {
+int codifica(char * nome_arquivo, char *diretorio, int sfile) {
 	FILE *F_in, *F_out;							// ponteiros - arquivo - F_in (leitura) - F_out (Escrita)
 	F_in = fopen (nome_arquivo,"rb");			// Arquivo - dados originais
 	Pacote pct;								// aux da estrutura
 	int ord = 0;								// contador/ordem dos bytes lidos
 	char nome_arq[20];							// nome do arquivo a ser gravado
+	int al, i;
+	char *paleta = (char *) malloc(sizeof(char) * sfile);
+
+	// Inicializando a paleta com 'o'
+	for(i = 0; i < sfile; i++)
+		paleta[i] = 'o';
+
+	srand(time(NULL));
 
 	while (!feof(F_in)) {
-		pct.n_bytes = fread(pct.dados, 1,TAM,F_in);			// leitura dos bytes do arquivo F_IN / Salva na estrututa qnt_bytes lidos
+		pct.n_bytes = fread(pct.dados, 1, TAM, F_in);			// leitura dos bytes do arquivo F_IN / Salva na estrututa qnt_bytes lidos
 		pct.ordem = ord; 						// Posicao (indice/ordem) dos dados lidos no arquivo original
 		sprintf(nome_arq, "%s/%06d.dat", diretorio, ord); 				// escreve o nome do arquivo (Sequencial) * FALTA IMPLMENTAR A ALEATORIDADE
 
 		// Falta gerar o nome aleatório do arquivo dentro da quantidade máxima de arquvios a serem gerados
+		al = rand() % sfile;
+
+		for(i = al; i < sfile; i++){
+			if(paleta[i] != 'x'){
+				paleta[i] = 'x';
+				break;
+			}
+
+			i++;
+			al = i;
+
+			if(i == (sfile - 1)){
+				i = 0;
+			}
+		}
 
 		F_out = fopen(nome_arq, "wb");							// Abre o arquivo para escrita
-		printf("\n arq %d - ord %d - num bytes -> %d",ord, pct.ordem, pct.n_bytes);	// Imprime na tela somente a título de controle
+		printf("\n arq %d - ord %d - num bytes -> %d", al, pct.ordem, pct.n_bytes);	// Imprime na tela somente a título de controle
 		fwrite(&pct, sizeof(Pacote), 1, F_out);						// Escreve a estrutura no arquivo F_out
 		fclose(F_out);									// Fecha o arquivo F_out
 		ord ++;                         						// Incrementa o contador
@@ -55,14 +78,12 @@ void decodifica (int ord, char * nome_arquivo, char *diretorio) {
 	fclose(F_out);											// Fecha o arquivo de Escrita
 }
 
-
-
 int insereAVL(No **p, Pacote inf_pct) {
     int cresceu;
 	int x = inf_pct.ordem;
 
     // O no raiz esta vazio
-    if(*p == NULL) { // Este IF esta OK
+    if(*p == NULL) {
         *p = (No *) malloc(sizeof(No));
 
         (*p)->chave = x;
@@ -70,7 +91,6 @@ int insereAVL(No **p, Pacote inf_pct) {
         (*p)->bal = 0;
 		(*p)->inf_pct = inf_pct;
 
-        // printf("Inseri o valor chave: %d\n", (*p)->chave);
         // Esta subarvore cresceu
         cresceu = 1;
     }
@@ -99,7 +119,6 @@ int insereAVL(No **p, Pacote inf_pct) {
                 case -1:
                     if((*p)->esq->bal == -1) {
                         // Rotacao para a direita
-                        // printf("Mandei rotacionar a raiz %d\n", (*p)->chave);
                         rot_dir(p);
                         // Arruma os balanceamentos
                         (*p)->bal = (*p)->dir->bal = 0;
@@ -107,10 +126,8 @@ int insereAVL(No **p, Pacote inf_pct) {
                     else {
                         // Rotacao dupla
                         // Rotaciona primeiro a esquerda
-                        // printf("Mandei rotacionar o no %d\n", (*p)->esq->chave);
                         rot_esq(&(*p)->esq);
                         // Depois rotaciona a direita
-                        // printf("Mandei rotacionar a raiz %d\n", (*p)->chave);
                         rot_dir(p);
                         // Acerta balanceamentos
                         if((*p)->bal == -1) {
@@ -132,7 +149,6 @@ int insereAVL(No **p, Pacote inf_pct) {
     // Verifica se tem que inserir a direita
     else if((*p)->chave < x) {
         // Tenta inserir a direita e ve se a sub-arvore cresceu
-        // puts("Chamando insereAVL (direita) again");
         cresceu = insereAVL(&(*p)->dir, inf_pct);
 
         if(cresceu) {
@@ -151,10 +167,8 @@ int insereAVL(No **p, Pacote inf_pct) {
                 // Se a arvore da direita ja era maior entao deve-se re-balancear
                 case 1:
                     // Verifica qual o caso de re-balanceamentos
-                    // Se a arvore da direita do filho da direita esta mais alta entao basta uma rotacao para a esquerda
                     if((*p)->dir->bal == 1) {
                         // Rotacao para a esquerda
-                        // printf("Mandei rotacionar a raiz %d\n", (*p)->chave);
                         rot_esq(p);
                         // Acerta os balanceamentos
                         (*p)->bal = (*p)->esq->bal = 0;
@@ -162,10 +176,8 @@ int insereAVL(No **p, Pacote inf_pct) {
                     else {
                         // Rotacao dupla
                         // Primeiro a direita
-                        // printf("Mandei rotacionar a raiz %d\n", (*p)->dir->chave);
                         rot_dir(&(*p)->dir);
                         // Depois a esquerda
-                        // printf("Mandei rotacionar a raiz %d\n", (*p)->chave);
                         rot_esq(p);
                         // Acerta os balanceamentos
                         if((*p)->bal == -1) {
@@ -187,7 +199,6 @@ int insereAVL(No **p, Pacote inf_pct) {
     else
         cresceu = 0;
 
-    // puts("Saiu da insereAVL");
     return cresceu;
 }
 
@@ -198,14 +209,6 @@ void imprimeAVL(No **p, FILE *out) {
 		fwrite(&(*p)->inf_pct.dados, sizeof(char), (*p)->inf_pct.n_bytes, out);
 		printf("\n Escrevendo arq X - ord %d - num bytes -> %d", (*p)->inf_pct.ordem, (*p)->inf_pct.n_bytes);	// impressão de controke
         imprimeAVL(&(*p)->dir, out);
-    }
-}
-
-void dois_imprimeAVL(No **p) {
-    if((*p) != NULL) {
-        dois_imprimeAVL(&(*p)->esq);
-        printf("[%d]\n", (*p)->chave);
-        dois_imprimeAVL(&(*p)->dir);
     }
 }
 
@@ -232,10 +235,7 @@ int altura_arvore(No **p) {
 int rot_dir(No **p) {
     No *q, *tmp;
 
-    // puts("Rotacionando para a direita");
-
-    if((*p) == NULL)
-        return 1;
+    if((*p) == NULL) return 1;
 
     q = (*p)->esq;
     tmp = q->dir;
@@ -249,9 +249,7 @@ int rot_dir(No **p) {
 int rot_esq(No **p) {
     No *q, *tmp;
 
-    // puts("Rotacionando para a esquerda");
-    if((*p) == NULL)
-        return 1;
+    if((*p) == NULL) return 1;
 
     q = (*p)->dir;
     tmp = q->esq;
@@ -260,4 +258,15 @@ int rot_esq(No **p) {
     (*p) = q;
 
     return 0;
+}
+
+unsigned long int tamanho_arquivo (FILE* in) {
+	unsigned long int tamanho;
+	unsigned long int atual = ftell( in );
+
+	fseek(in, 0, SEEK_END );
+	tamanho = ftell( in );
+	fseek(in, atual, SEEK_SET );
+
+	return tamanho;
 }

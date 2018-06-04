@@ -11,6 +11,7 @@
 #include <stdlib.h>
 #include <dirent.h>
 #include <string.h>
+#include <time.h>
 
 /* Tamanho de bytes a serem armazenados por no */
 #define TAM 1024
@@ -38,7 +39,7 @@ typedef struct _no {
 } No;
 
 
-int codifica(char * nome_arquivo, char *diretorio);
+int codifica(char * nome_arquivo, char *diretorio, int sfile);
 
 void decodifica (int ord, char * nome_arquivo, char *diretorio);
 
@@ -62,5 +63,7 @@ int rot_dir(No **p);
 // Recebe um no **p que aponta para a raiz da arvrore
 // Rotaciona este no para a esquerda
 int rot_esq(No **p);
+
+unsigned long int tamanho_arquivo (FILE* in);
 
 #endif

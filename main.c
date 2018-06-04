@@ -13,35 +13,37 @@
 
 #include "lib.h"
 
-/* Biblioteca utilizada apenas para testes */
-#include <time.h>
-
 int main(int argc, char *arvg[]) {
     char nome_arquivo[100], diretorio[100]; // = "files/VIDEO_ORIGINAL.zip";	// Definição do nome do arquivo original do vídeo
 	int qnt_arquivos = 0;                               // Quantidade de arquivos escritos
     DIR *dir;
     struct dirent  *lsdir;
+    int n_bytes;
+    FILE *file;
 
 
 
     if(*arvg[1] == 'c') {
         puts("Digite o nome do arquivo .zip:");
         scanf("%[^\n]s", nome_arquivo);
+        setbuf(stdin, NULL);
         puts("Digite o nome do diretorio dos dados:");
         scanf("%[^\n]s", diretorio);
         setbuf(stdin, NULL);
-        codifica(nome_arquivo, diretorio);		// "Codifica" o arquivo
+        file = fopen(nome_arquivo, "r");
+        n_bytes = tamanho_arquivo(file);
+        codifica(nome_arquivo, diretorio, n_bytes);		// "Codifica" o arquivo
 
         return 0;
     }
     else if(*arvg[1] == 'd') {
-        puts("Digite o diretorio com os dados do video a ser reconstruido:");
+        puts("Digite o diretorio com os dados do arquivo a ser reconstruido:");
         puts("Exemplo: files/");
         scanf("%[^\n]s", diretorio);
         setbuf(stdin, NULL);
 
         puts("Digite o nome do arquivo .zip:");
-        puts("Exemplo: video_reconstruido.zip");
+        puts("Exemplo: arquivo.zip");
         scanf("%[^\n]s", nome_arquivo);
         setbuf(stdin, NULL);
 
