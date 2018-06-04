@@ -26,13 +26,13 @@
      char dados[TAM]; // bytes de vídeo
      int ordem; // índice do vídeo
      int n_bytes; // quantidade de bytes lidos
- } TipoItem;
+ } Pacote;
 
- // Estrutura para teste da arvore AVL
+// Estrutura de um nó da arvore AVL
 typedef struct _no {
     int chave; // Valor chave
     int bal; // Indice de balanceamento
-    TipoItem inf_video;
+    Pacote inf_video;
     struct _no *esq; // Ponteiro para a subarvore esquerda
     struct _no *dir; // Ponteiro para a subarvore direita
 } No;
@@ -44,7 +44,7 @@ void decodifica (int ord, char * nome_arquivo, char *diretorio);
 
 // Recebe um inteiro x e um no **p que aponta para a raiz da arvore
 // Insere x na arvore
-int insereAVL(No **p, TipoItem inf);
+int insereAVL(No **p, Pacote inf);
 
 // Recebe um no **p que aponta para a raiz da arvore
 // Imprime o item chave de cada no da arvore

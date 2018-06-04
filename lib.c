@@ -10,8 +10,8 @@
 int codifica(char * nome_arquivo, char *diretorio) {
 	FILE *F_in, *F_out;							// ponteiros - arquivo - F_in (leitura) - F_out (Escrita)
 	F_in = fopen (nome_arquivo,"rb");			// Arquivo - dados originais
-	TipoItem it;								// aux da estrutura
-	int ord = 1;								// contador/ordem dos bytes lidos
+	Pacote it;								// aux da estrutura
+	int ord = 0;								// contador/ordem dos bytes lidos
 	char nome_arq[20];							// nome do arquivo a ser gravado
 
 	while (!feof(F_in)) {
@@ -23,7 +23,7 @@ int codifica(char * nome_arquivo, char *diretorio) {
 
 		F_out = fopen(nome_arq, "wb");							// Abre o arquivo para escrita
 		printf("\n arq %d - ord %d - num bytes -> %d",ord, it.ordem, it.n_bytes);	// Imprime na tela somente a título de controle
-		fwrite(&it, sizeof(TipoItem),1,F_out);						// Escreve a estrutura no arquivo F_out
+		fwrite(&it, sizeof(Pacote),1,F_out);						// Escreve a estrutura no arquivo F_out
 		fclose(F_out);									// Fecha o arquivo F_out
 		ord ++;                         						// Incrementa o contador
 	}
@@ -38,32 +38,26 @@ void decodifica (int ord, char * nome_arquivo, char *diretorio) {
 
 	int i;
 	char nome_arq[30];
-	TipoItem it;
+	Pacote it;
     No *raiz = NULL;
 
 	for (i = 0; i < ord; i++) {
 		sprintf(nome_arq, "%s/%06d.dat", diretorio, i); 				// Gera o nome do arquivo Sequencial para leitura
 
 		F_in = fopen(nome_arq, "rb");					// Abre o arquivo para realizar a leitura da estrutura salva
-		fread(&it, sizeof(TipoItem),1,F_in);				// Faz a leitura da estrutura conforme nome do arquivo
+		fread(&it, sizeof(Pacote), 1, F_in);				// Faz a leitura da estrutura conforme nome do arquivo
         insereAVL(&raiz, it);
-        // ORDENAÇÃO DAS ESTRUTURAS LIDAS PELA AVL
         fclose(F_in);
     }
 
-	// dois_imprimeAVL(&raiz); return;
-	imprimeAVL(&raiz, F_out); return;
+	imprimeAVL(&raiz, F_out);
 
-		// fwrite(&it.dados, sizeof(char),it.n_bytes,F_out);					// Escreve o it.dados CONFORME (indice/ordem) no arquivo de reconstrução
-		// printf("\n Escrevendo arq %d - ord %d - num bytes -> %d",i, it.ordem, it.n_bytes);	// impressão de controke
-		// fclose(F_in);										// Fecha o arquivo de leitura
-	// }
 	fclose(F_out);											// Fecha o arquivo de Escrita
 }
 
 
 
-int insereAVL(No **p, TipoItem inf_video) {
+int insereAVL(No **p, Pacote inf_video) {
     int cresceu;
 	int x = inf_video.ordem;
 
@@ -203,7 +197,6 @@ void imprimeAVL(No **p, FILE *out) {
 		// Escreve o &(*p)->inf_video.dados CONFORME (indice/ordem) no arquivo de reconstrução
 		fwrite(&(*p)->inf_video.dados, sizeof(char), (*p)->inf_video.n_bytes, out);
 		printf("\n Escrevendo arq X - ord %d - num bytes -> %d", (*p)->inf_video.ordem, (*p)->inf_video.n_bytes);	// impressão de controke
-        // printf("[%d]\n", (*p)->chave);
         imprimeAVL(&(*p)->dir, out);
     }
 }
