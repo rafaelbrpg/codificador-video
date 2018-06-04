@@ -32,7 +32,7 @@
 typedef struct _no {
     int chave; // Valor chave
     int bal; // Indice de balanceamento
-    Pacote inf_video;
+    Pacote inf_pct;
     struct _no *esq; // Ponteiro para a subarvore esquerda
     struct _no *dir; // Ponteiro para a subarvore direita
 } No;
