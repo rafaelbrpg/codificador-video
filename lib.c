@@ -14,8 +14,9 @@ int codifica(char * nome_arquivo, char *diretorio, int sfile) {
 	int ord = 0;								// contador/ordem dos bytes lidos
 	char nome_arq[20];							// nome do arquivo a ser gravado
 	int al, i;
-	char *paleta = (char *) malloc(sizeof(char) * sfile);
+	char *paleta = (char *) malloc(sizeof(char) * (sfile / TAM));
 
+	sfile = (sfile/TAM);
 	// Inicializando a paleta com 'o'
 	for(i = 0; i < sfile; i++)
 		paleta[i] = 'o';
@@ -27,7 +28,6 @@ int codifica(char * nome_arquivo, char *diretorio, int sfile) {
 		pct.ordem = ord; 						// Posicao (indice/ordem) dos dados lidos no arquivo original
 		sprintf(nome_arq, "%s/%06d.dat", diretorio, ord); 				// escreve o nome do arquivo (Sequencial) * FALTA IMPLMENTAR A ALEATORIDADE
 
-		// Falta gerar o nome aleatório do arquivo dentro da quantidade máxima de arquvios a serem gerados
 		al = rand() % sfile;
 
 		for(i = al; i < sfile; i++){
@@ -45,7 +45,7 @@ int codifica(char * nome_arquivo, char *diretorio, int sfile) {
 		}
 
 		F_out = fopen(nome_arq, "wb");							// Abre o arquivo para escrita
-		printf("\n arq %d - ord %d - num bytes -> %d", al, pct.ordem, pct.n_bytes);	// Imprime na tela somente a título de controle
+		printf("\n arq %d - ord %d - num bytes -> %d", al, pct.ordem, pct.n_bytes);	// Imprime na tela somente a titulo de controle
 		fwrite(&pct, sizeof(Pacote), 1, F_out);						// Escreve a estrutura no arquivo F_out
 		fclose(F_out);									// Fecha o arquivo F_out
 		ord ++;                         						// Incrementa o contador
@@ -55,7 +55,7 @@ int codifica(char * nome_arquivo, char *diretorio, int sfile) {
 	return ord;                                                             // Retorna a quantidade de arquvios criados
 }
 
-void decodifica (int ord, char * nome_arquivo, char *diretorio) {
+void decodifica (int qtd_arquivos, char * nome_arquivo, char *diretorio) {
 	FILE *F_in, *F_out;
 	F_out = fopen(nome_arquivo, "wb");
 
@@ -64,7 +64,7 @@ void decodifica (int ord, char * nome_arquivo, char *diretorio) {
 	Pacote pct;
     No *raiz = NULL;
 
-	for (i = 0; i < ord; i++) {
+	for (i = 0; i < qtd_arquivos; i++) {
 		sprintf(nome_arq, "%s/%06d.dat", diretorio, i); 				// Gera o nome do arquivo Sequencial para leitura
 
 		F_in = fopen(nome_arq, "rb");					// Abre o arquivo para realizar a leitura da estrutura salva
@@ -262,11 +262,11 @@ int rot_esq(No **p) {
 
 unsigned long int tamanho_arquivo (FILE* in) {
 	unsigned long int tamanho;
-	unsigned long int atual = ftell( in );
+	unsigned long int atual = ftell(in);
 
-	fseek(in, 0, SEEK_END );
+	fseek(in, 0, SEEK_END);
 	tamanho = ftell( in );
-	fseek(in, atual, SEEK_SET );
+	fseek(in, atual, SEEK_SET);
 
 	return tamanho;
 }

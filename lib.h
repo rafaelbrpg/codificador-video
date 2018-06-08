@@ -41,7 +41,7 @@ typedef struct _no {
 
 int codifica(char * nome_arquivo, char *diretorio, int sfile);
 
-void decodifica (int ord, char * nome_arquivo, char *diretorio);
+void decodifica (int qtd_arquivos, char * nome_arquivo, char *diretorio);
 
 // Recebe um inteiro x e um no **p que aponta para a raiz da arvore
 // Insere x na arvore
