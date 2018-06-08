@@ -9,7 +9,7 @@ Compilador utilizado:
 Para compilar a biblioteca:
     $ gcc -c lib.c lib.h
 
-Para compilar o arquivo main e gerar um executável:
+Para compilar o arquivo main e gerar um executavel:
     $ gcc main.c lib.c -Wall
     ou
     $ gcc main.c lib.o -Wall

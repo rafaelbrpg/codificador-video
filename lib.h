@@ -52,11 +52,6 @@ int insereAVL(No **p, Pacote inf);
 void imprimeAVL(No **p, FILE *out);
 
 // Recebe um no **p que aponta para a raiz da arvore
-int altura_arvore(No **p);
-
-void dois_imprimeAVL(No **p);
-
-// Recebe um no **p que aponta para a raiz da arvore
 // Rotaciona este no para a direita
 int rot_dir(No **p);
 

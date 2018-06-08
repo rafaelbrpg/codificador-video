@@ -212,26 +212,6 @@ void imprimeAVL(No **p, FILE *out) {
     }
 }
 
-// Algoritmo que calcula a altura de uma arvore binaria de pesquisa
-int altura_arvore(No **p) {
-    int alt_esq, alt_dir;
-
-    // Caso em que a arvore esta vazia.
-    if((*p) == NULL) {
-        return -1;
-    }
-    else {
-        alt_esq = altura_arvore(&(*p)->esq);
-        alt_dir = altura_arvore(&(*p)->dir);
-
-        if(alt_esq > alt_dir)
-            return alt_esq + 1;
-        else
-            return alt_dir + 1;
-    }
-}
-
-
 int rot_dir(No **p) {
     No *q, *tmp;
 
